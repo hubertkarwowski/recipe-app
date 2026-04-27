@@ -1,6 +1,7 @@
 import RecipeCard from '@/components/RecipeCard';
 import { spacing } from '@/constants/theme';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 type Label = 'vege' | 'vegan';
 
@@ -86,6 +87,10 @@ export const recipes: Recipe[] = [
 ];
 
 export default function Index() {
+  const router = useRouter();
+  const onPress = (id: string) =>
+    router.push({ pathname: '/przepis/[id]', params: { id } });
+
   return (
     <View style={{ padding: 16 }}>
       <ScrollView
@@ -94,7 +99,22 @@ export default function Index() {
         showsHorizontalScrollIndicator={false}
       >
         {recipes.map((recipe) => (
-          <RecipeCard key={recipe.id} variant="default" recipe={recipe} />
+          <Pressable key={recipe.id} onPress={() => onPress(recipe.id)}>
+            <RecipeCard variant="default" recipe={recipe} />
+          </Pressable>
+        ))}
+        <RecipeCard variant="showMore" />
+      </ScrollView>
+      <Text>Zapisane przepisy</Text>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        {recipes.map((recipe) => (
+          <Pressable key={recipe.id} onPress={() => onPress(recipe.id)}>
+            <RecipeCard variant="default" recipe={recipe} />
+          </Pressable>
         ))}
         <RecipeCard variant="showMore" />
       </ScrollView>
